@@ -104,7 +104,7 @@ class MealDetailsScreen extends ConsumerWidget {
                               ),
                             ),
                             label: Text(
-                              '${ingredient.ingredientName} • ${ingredient.ingredientAmount}',
+                              '${ingredient.ingredientName} - ${ingredient.ingredientAmount}',
                             ),
                           ),
                         )
