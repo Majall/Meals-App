@@ -51,6 +51,14 @@ class MealDetailsScreen extends ConsumerWidget {
                   width: double.infinity,
                   height: 300,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Theme.of(context).colorScheme.surface,
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.image_not_supported_outlined,
+                      size: 48,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -75,8 +83,25 @@ class MealDetailsScreen extends ConsumerWidget {
                         .map(
                           (ingredient) => Chip(
                             avatar: CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(ingredient.ingredientImage),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                              child: ClipOval(
+                                child: Image.network(
+                                  ingredient.ingredientImage,
+                                  width: 24,
+                                  height: 24,
+                                  fit: BoxFit.cover,
+                                  errorBuilder:
+                                      (context, error, stackTrace) =>
+                                          Icon(
+                                    Icons.image_not_supported_outlined,
+                                    size: 16,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
                             ),
                             label: Text(
                               '${ingredient.ingredientName} • ${ingredient.ingredientAmount}',

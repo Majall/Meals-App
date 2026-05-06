@@ -39,6 +39,14 @@ class MealItem extends StatelessWidget {
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: 220,
+                imageErrorBuilder: (context, error, stackTrace) => Container(
+                  color: Theme.of(context).colorScheme.surface,
+                  alignment: Alignment.center,
+                  child: const Icon(
+                    Icons.image_not_supported_outlined,
+                    size: 48,
+                  ),
+                ),
               ),
             ),
             Padding(

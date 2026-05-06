@@ -22,6 +22,15 @@ class CategoryGridItem extends StatelessWidget {
             child: Image.network(
               category.image,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: category.color.withOpacity(0.3),
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.image_not_supported_outlined,
+                  color: Colors.white70,
+                  size: 40,
+                ),
+              ),
             ),
           ),
           Positioned.fill(
