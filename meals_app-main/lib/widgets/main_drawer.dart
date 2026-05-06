@@ -38,7 +38,7 @@ class MainDrawer extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Let\'s cook something great',
+                      "Let's cook something great",
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color:
                                 Theme.of(context).colorScheme.onSurfaceVariant,
