@@ -17,21 +17,35 @@ class MainDrawer extends StatelessWidget {
                 Theme.of(context).colorScheme.primaryContainer.withOpacity(0.8),
               ], begin: Alignment.topLeft, end: Alignment.bottomRight),
             ),
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Row(
               children: [
                 Icon(
-                  Icons.fastfood,
+                  Icons.local_dining,
                   size: 48,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  'Cooking Up!',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                )
+                const SizedBox(width: 12),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello, Foodie!',
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Let's cook something great",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

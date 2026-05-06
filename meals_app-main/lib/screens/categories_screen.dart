@@ -30,23 +30,57 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3 / 2,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
-      ),
-      children: [
-        // availabeCategories.map((category) => CategoryGridItem(category: category)).toList(),
-        for (final category in availabelCategories)
-          CategoryGridItem(
-            category: category,
-            onSelectedCategory: () {
-              _selectedCategory(context, category);
-            },
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'What are you craving today?',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Pick a category and find a meal that feels just right.',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
+                      ),
+                ),
+              ],
+            ),
           ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 4 / 3,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final category = availabelCategories[index];
+                return CategoryGridItem(
+                  category: category,
+                  onSelectedCategory: () {
+                    _selectedCategory(context, category);
+                  },
+                );
+              },
+              childCount: availabelCategories.length,
+            ),
+          ),
+        ),
       ],
     );
   }
