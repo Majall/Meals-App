@@ -19,75 +19,113 @@ class MealDetailsScreen extends ConsumerWidget {
     final isFavourite = favouriteMeals.contains(meal);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          meal.title,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              final wasAdded = ref
-                  .read(favouritesMealsProvider.notifier)
-                  .toggleMealFavouriteStatus(meal);
-              ScaffoldMessenger.of(context).clearSnackBars();
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(wasAdded
-                    ? 'Meal added to favourites'
-                    : 'Meal removed from favourites'),
-                duration: const Duration(seconds: 2),
-              ));
-            },
-            icon: Icon(isFavourite ? Icons.star : Icons.star_border),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Image.network(
-              meal.imageUrl,
-              width: double.infinity,
-              height: 300,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Ingredients',
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            for (final ingredient in meal.ingredients)
-              Text(
-                '${ingredient.ingredientName} - ${ingredient.ingredientAmount}',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-              ),
-            const SizedBox(height: 15),
-            Text(
-              'Steps',
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            for (final step in meal.steps)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  step,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 280,
+            pinned: true,
+            stretch: true,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  final wasAdded = ref
+                      .read(favouritesMealsProvider.notifier)
+                      .toggleMealFavouriteStatus(meal);
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(wasAdded
+                        ? 'Meal added to favourites'
+                        : 'Meal removed from favourites'),
+                    duration: const Duration(seconds: 2),
+                  ));
+                },
+                icon: Icon(isFavourite ? Icons.star : Icons.star_border),
+              )
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(meal.title),
+              background: Hero(
+                tag: meal.id,
+                child: Image.network(
+                  meal.imageUrl,
+                  width: double.infinity,
+                  height: 300,
+                  fit: BoxFit.cover,
                 ),
               ),
-          ],
-        ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Ingredients',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: meal.ingredients
+                        .map(
+                          (ingredient) => Chip(
+                            avatar: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(ingredient.ingredientImage),
+                            ),
+                            label: Text(
+                              '${ingredient.ingredientName} • ${ingredient.ingredientAmount}',
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Steps',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 24),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final step = meal.steps[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 6,
+                    ),
+                    child: Card(
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          child: Text(
+                            '${index + 1}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        title: Text(step),
+                      ),
+                    ),
+                  );
+                },
+                childCount: meal.steps.length,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

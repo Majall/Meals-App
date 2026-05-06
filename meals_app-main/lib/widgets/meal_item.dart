@@ -22,73 +22,60 @@ class MealItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       clipBehavior: Clip.hardEdge,
-      elevation: 4,
       child: InkWell(
+        borderRadius: BorderRadius.circular(20),
         onTap: () {
           onSelectedMeal(context, meal);
         },
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FadeInImage(
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: 250,
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: Colors.black54,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-                child: Column(
-                  children: [
-                    Text(
-                      meal.title,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MealItemTrait(
-                          icon: Icons.schedule,
-                          label: '${meal.duration} min',
-                        ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        MealItemTrait(
-                          icon: Icons.work,
-                          label: complexityText,
-                        ),
-                        MealItemTrait(
-                          icon: Icons.attach_money,
-                          label: affordabilityText,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+            Hero(
+              tag: meal.id,
+              child: FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(meal.imageUrl),
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 220,
               ),
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    meal.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      MealItemTrait(
+                        icon: Icons.schedule,
+                        label: '${meal.duration} min',
+                      ),
+                      MealItemTrait(
+                        icon: Icons.work_outline,
+                        label: complexityText,
+                      ),
+                      MealItemTrait(
+                        icon: Icons.payments_outlined,
+                        label: affordabilityText,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

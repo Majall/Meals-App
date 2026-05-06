@@ -28,6 +28,12 @@ class MealsScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Icon(
+            Icons.restaurant_menu,
+            size: 60,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(height: 12),
           Text(
             'No meals found!',
             style: Theme.of(context)
@@ -39,7 +45,7 @@ class MealsScreen extends StatelessWidget {
             height: 20,
           ),
           Text(
-            'Try selecting a different category.',
+            'Try selecting a different category or adjust your filters.',
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge!
@@ -50,6 +56,7 @@ class MealsScreen extends StatelessWidget {
     );
     if (meals.isNotEmpty) {
       content = ListView.builder(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
         itemCount: meals.length,
         itemBuilder: (ctx, index) => MealItem(
           meal: meals[index],

@@ -51,6 +51,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     );
 
     var activePageTitle = 'Categories';
+    var activePageSubtitle = 'Discover something tasty';
 
     if (_selectedPageIndex == 1) {
       final favouriteMeals = ref.watch(favouritesMealsProvider);
@@ -58,11 +59,26 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         meals: favouriteMeals,
       );
       activePageTitle = 'Your Favourites';
+      activePageSubtitle = 'Meals you love, ready anytime';
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(activePageTitle),
+        toolbarHeight: 72,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(activePageTitle),
+            const SizedBox(height: 4),
+            Text(
+              activePageSubtitle,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color:
+                        Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  ),
+            ),
+          ],
+        ),
       ),
       drawer: MainDrawer(
         onSelectScreen: _setScreen,
