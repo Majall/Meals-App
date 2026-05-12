@@ -124,21 +124,21 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
             sliver: SliverToBoxAdapter(
-              child: Column(
-                children: List.generate(
-                  2,
-                  (index) => Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                    child: Row(
-                      children: const [
-                        Expanded(child: SkeletonBox(height: 140)),
-                        SizedBox(width: AppSpacing.lg),
-                        Expanded(child: SkeletonBox(height: 140)),
-                      ],
+                  child: Column(
+                    children: List.generate(
+                      2,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                        child: Row(
+                          children: [
+                            const Expanded(child: SkeletonBox(height: 140)),
+                            const SizedBox(width: AppSpacing.lg),
+                            const Expanded(child: SkeletonBox(height: 140)),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
             ),
           )
         else if (categories.isEmpty)

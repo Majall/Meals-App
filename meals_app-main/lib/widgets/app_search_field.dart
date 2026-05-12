@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/theme/app_theme.dart';
 
-class AppSearchField extends StatelessWidget {
+class AppSearchField extends StatefulWidget {
   const AppSearchField({
     super.key,
     required this.hintText,
@@ -14,21 +14,58 @@ class AppSearchField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
 
   @override
+  State<AppSearchField> createState() => _AppSearchFieldState();
+}
+
+class _AppSearchFieldState extends State<AppSearchField> {
+  bool _showClear = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _showClear = widget.controller?.text.isNotEmpty ?? false;
+    widget.controller?.addListener(_handleControllerChange);
+  }
+
+  @override
+  void didUpdateWidget(covariant AppSearchField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_handleControllerChange);
+      _showClear = widget.controller?.text.isNotEmpty ?? false;
+      widget.controller?.addListener(_handleControllerChange);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.removeListener(_handleControllerChange);
+    super.dispose();
+  }
+
+  void _handleControllerChange() {
+    final shouldShow = widget.controller?.text.isNotEmpty ?? false;
+    if (_showClear != shouldShow) {
+      setState(() => _showClear = shouldShow);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: controller,
-      onChanged: onChanged,
+      controller: widget.controller,
+      onChanged: widget.onChanged,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: widget.hintText,
         prefixIcon: const Icon(Icons.search),
-        suffixIcon: controller != null && controller!.text.isNotEmpty
+        suffixIcon: _showClear
             ? IconButton(
                 tooltip: 'Clear search',
                 icon: const Icon(Icons.close),
                 onPressed: () {
-                  controller?.clear();
-                  onChanged?.call('');
+                  widget.controller?.clear();
+                  widget.onChanged?.call('');
                 },
               )
             : null,
