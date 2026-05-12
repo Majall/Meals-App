@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/providers/filters_provider.dart';
-// import 'package:meals_app/screens/tabs.dart';
-// import 'package:meals_app/widgets/main_drawer.dart';
+import 'package:meals_app/theme/app_theme.dart';
+import 'package:meals_app/widgets/app_section_header.dart';
+import 'package:meals_app/widgets/glass_app_bar.dart';
+import 'package:meals_app/widgets/premium_card.dart';
 
 class FiltersScreen extends ConsumerWidget {
   const FiltersScreen({super.key});
@@ -18,70 +20,78 @@ class FiltersScreen extends ConsumerWidget {
       required String subtitle,
       required IconData icon,
     }) {
-      return Card(
-        child: SwitchListTile(
+      return PremiumCard(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: SwitchListTile.adaptive(
           value: activeFilters[filter]!,
           onChanged: (isChecked) {
             ref.read(filtersProvider.notifier).setFilter(filter, isChecked);
           },
           title: Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
           ),
           subtitle: Text(
             subtitle,
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: colorScheme.onSurface.withOpacity(0.7),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
           ),
-          secondary: Icon(icon, color: colorScheme.primary),
+          secondary: CircleAvatar(
+            backgroundColor: colorScheme.primary.withOpacity(0.15),
+            child: Icon(icon, color: colorScheme.primary),
+          ),
           activeColor: colorScheme.primary,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8),
         ),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Filters'),
+      appBar: GlassAppBar(
+        title: 'Filters',
+        subtitle: 'Customize your premium meal feed',
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          AppSpacing.lg,
+          AppSpacing.lg,
+          AppSpacing.xl,
+        ),
         children: [
-          Text(
-            'Personalize your feed',
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+          const AppSectionHeader(
+            title: 'Personalize your feed',
+            subtitle: 'Choose what fits your lifestyle and we will tailor the meals.',
+            padding: EdgeInsets.zero,
           ),
-          const SizedBox(height: 6),
-          Text(
-            'Choose what fits your lifestyle and we will tailor the meals.',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: colorScheme.onSurface.withOpacity(0.7),
-                ),
-          ),
-          const SizedBox(height: 16),
           buildFilterTile(
             filter: Filter.glutenFree,
             title: 'Gluten-free',
             subtitle: 'Only include gluten-free meals.',
             icon: Icons.no_food_outlined,
           ),
+          const SizedBox(height: AppSpacing.md),
           buildFilterTile(
             filter: Filter.lactoseFree,
             title: 'Lactose-free',
             subtitle: 'Only include lactose-free meals.',
             icon: Icons.icecream_outlined,
           ),
+          const SizedBox(height: AppSpacing.md),
           buildFilterTile(
             filter: Filter.vegetarian,
             title: 'Vegetarian',
             subtitle: 'Only include vegetarian meals.',
             icon: Icons.eco_outlined,
           ),
+          const SizedBox(height: AppSpacing.md),
           buildFilterTile(
             filter: Filter.vegan,
             title: 'Vegan',
