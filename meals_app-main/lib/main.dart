@@ -1,76 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:meals_app/providers/theme_provider.dart';
 import 'package:meals_app/screens/tabs.dart';
+import 'package:meals_app/theme/app_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-final colorScheme = ColorScheme.fromSeed(
-  seedColor: const Color(0xFF6C4DDC),
-  brightness: Brightness.dark,
-);
-
-final theme = ThemeData(
-  useMaterial3: true,
-  colorScheme: colorScheme,
-  scaffoldBackgroundColor: const Color(0xFF0F1115),
-  textTheme: GoogleFonts.poppinsTextTheme().apply(
-    bodyColor: colorScheme.onSurface,
-    displayColor: colorScheme.onSurface,
-  ),
-  appBarTheme: AppBarTheme(
-    backgroundColor: Colors.transparent,
-    elevation: 0,
-    centerTitle: false,
-    titleTextStyle: GoogleFonts.poppins(
-      fontSize: 22,
-      fontWeight: FontWeight.w600,
-      color: colorScheme.onSurface,
-    ),
-  ),
-  cardTheme: CardTheme(
-    color: const Color(0xFF1C1F26),
-    elevation: 6,
-    margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20),
-    ),
-  ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor: const Color(0xFF151821),
-    selectedItemColor: colorScheme.primary,
-    unselectedItemColor: colorScheme.onSurface.withOpacity(0.6),
-    type: BottomNavigationBarType.fixed,
-    showUnselectedLabels: true,
-  ),
-  chipTheme: ChipThemeData(
-    backgroundColor: const Color(0xFF242833),
-    labelStyle: GoogleFonts.poppins(
-      fontSize: 12,
-      color: colorScheme.onSurface,
-    ),
-    side: BorderSide(
-      color: colorScheme.primary.withOpacity(0.3),
-    ),
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-  ),
-);
-
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final preferences = await SharedPreferences.getInstance();
   runApp(
-    const ProviderScope(
-      child: App(),
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(preferences),
+      ],
+      child: const App(),
     ),
   );
 }
 
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
     return MaterialApp(
       title: 'Meals App',
-      theme: theme,
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeMode,
+      themeAnimationDuration: const Duration(milliseconds: 350),
+      themeAnimationCurve: Curves.easeOutCubic,
+      scrollBehavior: const _AppScrollBehavior(),
       home: const TabsScreen(),
     );
+  }
+}
+
+class _AppScrollBehavior extends MaterialScrollBehavior {
+  const _AppScrollBehavior();
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 }
