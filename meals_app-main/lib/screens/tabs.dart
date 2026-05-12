@@ -62,7 +62,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     final availableMeals = ref.watch(filteredMealsProvider);
 
     final pages = [
-      CategoriesScreen(availableMaals: availableMeals),
+      CategoriesScreen(availableMeals: availableMeals),
       MealsScreen(
         meals: ref.watch(favouritesMealsProvider),
         title: 'Your favourites',
@@ -123,7 +123,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
                   selectedIndex: _selectedPageIndex,
                   onDestinationSelected: _selectPage,
                   labelType: constraints.maxWidth >= 1100
-                      ? NavigationRailLabelType.none
+                      ? NavigationRailLabelType.all
                       : NavigationRailLabelType.selected,
                   extended: constraints.maxWidth >= 1100,
                   destinations: const [

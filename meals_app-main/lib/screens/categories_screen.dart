@@ -13,9 +13,9 @@ import 'package:meals_app/widgets/category_grid_item.dart';
 import 'package:meals_app/widgets/premium_card.dart';
 
 class CategoriesScreen extends StatefulWidget {
-  const CategoriesScreen({super.key, required this.availableMaals});
+  const CategoriesScreen({super.key, required this.availableMeals});
 
-  final List<Meal> availableMaals;
+  final List<Meal> availableMeals;
 
   @override
   State<CategoriesScreen> createState() => _CategoriesScreenState();
@@ -43,7 +43,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   void _selectedCategory(BuildContext context, Category category) {
-    final filteredMeals = widget.availableMaals
+    final filteredMeals = widget.availableMeals
         .where((meal) => meal.categories.contains(category.id))
         .toList();
 
@@ -122,23 +122,35 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ),
         if (_isLoading)
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            sliver: SliverToBoxAdapter(
-                  child: Column(
-                    children: List.generate(
-                      2,
-                      (index) => Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                        child: Row(
-                          children: [
-                            const Expanded(child: SkeletonBox(height: 140)),
-                            const SizedBox(width: AppSpacing.lg),
-                            const Expanded(child: SkeletonBox(height: 140)),
-                          ],
-                        ),
-                      ),
-                    ),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              0,
+              AppSpacing.lg,
+              AppSpacing.lg,
+            ),
+            sliver: SliverLayoutBuilder(
+              builder: (context, constraints) {
+                final width = constraints.crossAxisExtent;
+                final crossAxisCount = width > 1100
+                    ? 4
+                    : width > 720
+                        ? 3
+                        : 2;
+                final itemCount = crossAxisCount * 2;
+                return SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    childAspectRatio: 4 / 3,
+                    crossAxisSpacing: AppSpacing.lg,
+                    mainAxisSpacing: AppSpacing.lg,
                   ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) =>
+                        const SizedBox.expand(child: SkeletonBox()),
+                    childCount: itemCount,
+                  ),
+                );
+              },
             ),
           )
         else if (categories.isEmpty)
